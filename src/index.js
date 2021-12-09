@@ -4,16 +4,20 @@ const shipFactory = (size) => {
   const hitsTaken = Array(size).fill(false);
 
   const hit = (hitPosition) => {
-    if (hitPosition > (size - 1)) return Error('hitPosition > size');
+    if (hitPosition > (size - 1)) {
+      return 'error';
+      // throw new Error('hitPosition > size');
+    }
 
-    if (hitsTaken[hitPosition]) {
+    if (!hitsTaken[hitPosition]) {
       hitsTaken[hitPosition] = true;
       return 'success';
     }
+    console.log(hitsTaken[hitPosition]);
     return 'already hit before';
   };
 
-  const isSunk = (size, hitsTaken) => (hitsTaken.reduce((total, curr) => total + curr) >= size);
+  const isSunk = () => (hitsTaken.reduce((total, curr) => total + curr) >= size);
 
   return { size, hit, isSunk };
 };
@@ -53,4 +57,4 @@ function getRandomIntInclusive(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-module.exports = { ship1, ship2 };
+module.exports = { shipFactory, gameboardFactory };
