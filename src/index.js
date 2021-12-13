@@ -1,6 +1,32 @@
 console.log('test');
 
-const shipFactory = (size) => {
+const shipList = [];
+const gameboardList = [];
+
+function getRandomIntInclusive(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function create2DArray({
+  rows,
+  columns,
+  defaultValue,
+}) {
+  return Array.from({ length: rows }, () => (
+    Array.from({ length: columns }, () => defaultValue)
+  ));
+}
+
+const shipFactory = (size, shipOrient) => {
+  const shipID = shipList.length + 1;
+
+  if (!shipOrient) {
+    if (Math.random() < 0.5) shipOrient = 'vertical';
+    else shipOrient = 'horizontal';
+  }
+
   const hitsTaken = Array(size).fill(false);
 
   const hit = (hitPosition) => {
@@ -13,48 +39,125 @@ const shipFactory = (size) => {
       hitsTaken[hitPosition] = true;
       return 'success';
     }
-    console.log(hitsTaken[hitPosition]);
     return 'already hit before';
   };
 
   const isSunk = () => (hitsTaken.reduce((total, curr) => total + curr) >= size);
 
-  return { size, hit, isSunk };
+  return {
+    shipID, size, shipOrient, hit, isSunk,
+  };
 };
 
-const ship1 = shipFactory(5);
-const ship2 = shipFactory(2);
-
-ship1.hit(2);
-ship2.hit(7);
-
 const gameboardFactory = (boardSize = 10) => {
-  // let player1Board =
+  const board = create2DArray({ rows: boardSize, columns: boardSize, defaultValue: 0 });
+  const shipsOnBoard = [];
 
-  const placeShip = (shipSize, shipOrientation, xCoord, yCoord) => {
-    if (!shipOrientation) {
-      if (Math.random() < 0.5) shipOrientation = 'vertical';
-      else shipOrientation = 'horizontal';
+  const emptyTheBoard = () => {
+    for (let i = 0; i < board.length; i += 1) {
+      for (let j = 0; j < board[i].length; j += 1) {
+        board[i][j] = 0;
+      }
+    }
+    return board;
+  };
+
+  const placeShip = (shipObject, yCoord, xCoord) => {
+    if (!yCoord) {
+      do {
+        yCoord = getRandomIntInclusive(0, boardSize - 1);
+      } while (((boardSize - 1) - xCoord) > shipObject.size || shipObject.shipOrient === 'vertical');
     }
 
     if (!xCoord) {
       do {
         xCoord = getRandomIntInclusive(0, boardSize - 1);
-      } while (((boardSize - 1) - xCoord) > shipSize || shipOrientation === 'vertical');
+      } while (((boardSize - 1) - xCoord) > shipObject.size || shipObject.shipOrient === 'vertical');
     }
 
-    if (!yCoord) {
-      do {
-        yCoord = getRandomIntInclusive(0, boardSize - 1);
-      } while (((boardSize - 1) - xCoord) > shipSize || shipOrientation === 'vertical');
+    for (let i = 0; i < shipObject.size; i += 1) {
+      if (shipObject.shipOrient === 'vertical') {
+        board[yCoord + i][xCoord] = shipObject.shipID;
+      } else {
+        board[yCoord][xCoord + i] = shipObject.shipID;
+      }
     }
+
+    shipsOnBoard.push(shipObject);
+  };
+
+  // eslint-disable-next-line consistent-return
+  const identifyShipHitPosition = (shipObject, yCoord, xCoord) => {
+    let shipHitPosition = 1;
+    for (let i = 1; i < shipObject.size + 1; i += 1) {
+      if (shipObject.shipOrient === 'vertical') {
+        if (board[yCoord - i][xCoord] === board[yCoord][xCoord]) {
+          shipHitPosition += 1;
+        } else return shipHitPosition;
+      }
+      if (shipObject.shipOrient === 'horizontal') {
+        if (board[yCoord][xCoord - i] === board[yCoord][xCoord]) {
+          shipHitPosition += 1;
+        } else return shipHitPosition;
+      }
+    }
+  };
+
+  // eslint-disable-next-line consistent-return
+  const receiveAttack = (shipArray, yAttackCoord, xAttackCoord) => {
+    if (board[yAttackCoord][xAttackCoord] < 0) return 'already tried';
+
+    if (board[yAttackCoord][xAttackCoord] === 0) {
+      board[yAttackCoord][xAttackCoord] = -10;
+      return 'missed';
+    }
+
+    if (board[yAttackCoord][xAttackCoord] > 0) {
+      const shipID = board[yAttackCoord][xAttackCoord];
+      const hitPos = identifyShipHitPosition(shipArray[shipID], yAttackCoord, xAttackCoord);
+      shipArray[shipID].hit(hitPos);
+      board[yAttackCoord][xAttackCoord] = -100;
+      return 'success';
+    }
+  };
+
+  const allShipsSunk = () => {
+    let shipsSunkState = true;
+    shipsOnBoard.forEach((ship) => {
+      shipsSunkState *= ship.isSunk();
+    });
+
+    return shipsSunkState;
+  };
+
+  return {
+    board, boardSize, placeShip, emptyTheBoard, receiveAttack, allShipsSunk, shipsOnBoard,
   };
 };
 
-function getRandomIntInclusive(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
+const playerFactory = (playerID, name, isAI = false) => {
+  let score = 0;
+  const AIMemory = [];
 
-module.exports = { shipFactory, gameboardFactory };
+  const win = () => {
+    score += 1;
+  };
+
+  const AIPlay = (gameboard) => {
+    let yCoord = 0;
+    let xCoord = 0;
+
+    do {
+      yCoord = getRandomIntInclusive(0, gameboard.boardSize - 1);
+      xCoord = getRandomIntInclusive(0, gameboard.boardSize - 1);
+    } while (!AIMemory.contains(`${yCoord}, ${xCoord}`));
+    gameboard.receiveAttack(shipList, yCoord, xCoord);
+    AIMemory.push(`${yCoord}, ${xCoord}`);
+  };
+
+  return {
+    playerID, name, isAI, score, win, AIPlay,
+  };
+};
+
+module.exports = { shipFactory, gameboardFactory, playerFactory };
