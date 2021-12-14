@@ -1,3 +1,5 @@
+import './style.css';
+
 console.log('test');
 
 const shipList = [];
@@ -160,4 +162,6 @@ const playerFactory = (playerID, name, isAI = false) => {
   };
 };
 
-module.exports = { shipFactory, gameboardFactory, playerFactory };
+export { shipFactory, gameboardFactory, playerFactory };
+
+// module.exports = { shipFactory, gameboardFactory, playerFactory };

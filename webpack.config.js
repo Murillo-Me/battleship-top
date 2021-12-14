@@ -7,7 +7,6 @@ module.exports = {
   mode: 'development',
   entry: {
     main: './src/index.js',
-    index: './src/index.html',
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -25,24 +24,32 @@ module.exports = {
         test: /\.html$/i,
         loader: 'html-loader',
       },
+      // {
+      //   test: /\.(s(a|c)ss)$/,
+      //   use: [
+      //     'style-loader', // Injects style into DOM
+      //     'css-loader', // Turns CSS into JS
+      //     'sass-loader', // Turns SCSS into CSS
+      //   ],
+      // },
       {
-        test: /\.(s(a|c)ss)$/,
+        test: /\.css$/,
         use: [
-          'style-loader', // Injects style into DOM
+          MiniCssExtractPlugin.loader,
+          // 'style-loader', // Injects style into DOM
           'css-loader', // Turns CSS into JS
-          'sass-loader', // Turns SCSS into CSS
         ],
       },
-      {
-        test: /\.(png|svg|jpg|jpeg|gif)$/i,
-        type: 'asset/resource',
-      },
-      {
-        test: /\.(woff|woff2|eot|ttf|svg|jpg|png)$/,
-        use: {
-          loader: 'url-loader',
-        },
-      },
+      // {
+      //   test: /\.(png|svg|jpg|jpeg|gif)$/i,
+      //   type: 'asset/resource',
+      // },
+      // {
+      //   test: /\.(woff|woff2|eot|ttf|svg|jpg|png)$/,
+      //   use: {
+      //     loader: 'url-loader',
+      //   },
+      // },
     ],
   },
 };
