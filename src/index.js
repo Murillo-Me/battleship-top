@@ -54,6 +54,7 @@ const shipFactory = (size, shipOrient) => {
 
 const gameboardFactory = (boardSize = 10) => {
   const board = create2DArray({ rows: boardSize, columns: boardSize, defaultValue: 0 });
+  const boardID = gameboardList.length + 1;
   const shipsOnBoard = [];
 
   const emptyTheBoard = () => {
@@ -134,7 +135,7 @@ const gameboardFactory = (boardSize = 10) => {
   };
 
   return {
-    board, boardSize, placeShip, emptyTheBoard, receiveAttack, allShipsSunk, shipsOnBoard,
+    board, boardID, boardSize, placeShip, emptyTheBoard, receiveAttack, allShipsSunk, shipsOnBoard,
   };
 };
 
@@ -162,6 +163,32 @@ const playerFactory = (playerID, name, isAI = false) => {
     playerID, name, isAI, score, win, AIPlay,
   };
 };
+
+function createBoardDOM(gameboard) {
+  const gameboardElement = document.querySelector(`.gb-id-${gameboard.boardID}`);
+  for (let i = 0; i < gameboard.boardSize; i += 1) {
+    for (let j = 0; j < gameboard.boardSize; j += 1) {
+      const boardUnitElement = document.createElement('div');
+      boardUnitElement.classList.add('board-unit', `.r${i}-c${j}`);
+      gameboardElement.appendChild(boardUnitElement);
+    }
+  }
+}
+
+function receiveAttackDOM() {
+
+}
+
+const gameboard1 = gameboardFactory(10);
+gameboardList.push(gameboard1);
+const gameboard2 = gameboardFactory(10);
+gameboardList.push(gameboard2);
+
+createBoardDOM(gameboard1);
+createBoardDOM(gameboard2);
+
+const allBoardUnits = document.querySelectorAll('.board-unit');
+allBoardUnits.forEach((unit) => unit.addEventListener('click', (e) => { e.currentTarget.style['background-color'] = 'white'; }));
 
 export { shipFactory, gameboardFactory, playerFactory };
 
