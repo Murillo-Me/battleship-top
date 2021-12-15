@@ -71,7 +71,7 @@ main.game-container {
   border: 1px solid black;
 }
 
-.board-unit:hover {
+.playing-state:hover {
   background-color: var(--light-red-color);
   cursor:pointer;
 }
