@@ -27,14 +27,17 @@ img {
 :root {
   --gameboard-size: 400px;
 
+  --light-red-color: #b1617d;
   --medium-red-color: #84485D;
   --dark-red-color: #1C0202;
-  color: white
+    color: white;
 }
 
 body {
   background-color: black;
   background-image: url(./assets/images/flames.png);
+  background-position: top;
+  /* background-size: cover; */
   min-height: 100vh;
   min-width: 100vw;
 }
@@ -61,10 +64,16 @@ main.game-container {
   height: var(--gameboard-size);
   background-color: var(--medium-red-color);
   border-radius: 10px;
+  border: 3px solid black
 }
 
 .board-unit {
   border: 1px solid black;
+}
+
+.board-unit:hover {
+  background-color: var(--light-red-color);
+  cursor:pointer;
 }
 
 .player-info {
@@ -78,6 +87,7 @@ main.game-container {
 
 .player-name {
   font-size: 2rem;
+  text-shadow: 2px 2px 5px black;
 }
 
 .ship-list {
@@ -88,11 +98,12 @@ main.game-container {
   background-color: var(--dark-red-color);
   border-radius: 5px;
   padding: 5px;
+  height: 5.5rem;
+  width: 11.5rem;
 }
 
 .ship-item {
   margin-block: 5px;
   margin-inline: 8px;
-  /* flex-basis: 40%; */
-  height: 30%;
+  height: 20%;
 }
