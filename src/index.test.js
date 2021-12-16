@@ -1,7 +1,9 @@
-const { shipFactory, gameboardFactory } = require('./index');
+const { shipFactory, gameboardFactory } = require('./factories');
 
 describe('ship factory tests', () => {
-  const ship = shipFactory(5);
+  const shipList = [];
+  const ship = shipFactory(shipList, 5);
+  shipList.push(ship);
 
   test('testing ship size', () => {
     expect(ship.size).toBe(5);
@@ -28,22 +30,24 @@ describe('ship factory tests', () => {
 describe('gameboard factory tests', () => {
   const size = 10;
   const testArray = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  const gameboard = gameboardFactory(size);
+  const gameboardList = [];
+  const gameboard = gameboardFactory(gameboardList, size);
+  gameboardList.push(gameboard);
 
   const shipList = [];
-  const ship1 = shipFactory(3, 'vertical');
+  const ship1 = shipFactory(shipList, 3, 'vertical');
   shipList.push(ship1);
-  const ship2 = shipFactory(3, 'horizontal');
+  const ship2 = shipFactory(shipList, 3, 'horizontal');
   shipList.push(ship2);
 
   test('testing board creation', () => {
-    expect(gameboard.board[0]).toEqual(testArray);
-    expect(gameboard.board[size - 1]).toEqual(testArray);
+    expect(gameboard.boardArray[0]).toEqual(testArray);
+    expect(gameboard.boardArray[size - 1]).toEqual(testArray);
   });
 
   test('testing vertical ship placement', () => {
     gameboard.placeShip(ship1, 5, 5);
-    expect(gameboard.board).toEqual([
+    expect(gameboard.boardArray).toEqual([
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -59,13 +63,13 @@ describe('gameboard factory tests', () => {
 
   test('testing horizontal ship placement', () => {
     gameboard.placeShip(ship2, 5, 5);
-    expect(gameboard.board).toEqual([
+    expect(gameboard.boardArray).toEqual([
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 1, 1, 1, 0, 0],
+      [0, 0, 0, 0, 0, 2, 2, 2, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -93,7 +97,7 @@ describe('gameboard factory tests', () => {
     gameboard.placeShip(ship1, 2, 3);
 
     expect(gameboard.receiveAttack(shipList, yAttackCoord, xAttackCoord)).toBe('success');
-    expect(gameboard.board).toEqual([
+    expect(gameboard.boardArray).toEqual([
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
       [0, 0, 0, -100, 0, 0, 0, 0, 0, 0],

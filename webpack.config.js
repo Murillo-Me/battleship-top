@@ -45,11 +45,13 @@ module.exports = {
       //   type: 'asset/resource',
       // },
       // {
-      //   test: /\.(woff|woff2|eot|ttf|svg|jpg|png)$/,
+      //   test: /\.(woff|woff2|eot|ttf|svg)$/,
       //   use: {
-      //     loader: 'url-loader',
+      //     // loader: 'url-loader',
+      //     loader: 'url-loader?limit=10000&mimetype=application/octet-stream&name=./assets/fonts/[name].[ext]',
       //   },
       // },
+
     ],
   },
 };

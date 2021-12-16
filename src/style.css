@@ -1,3 +1,8 @@
+/* @font-face {
+  font-family: 'Almendra SC';
+  src: url('./assets/fonts/AlmendraSC-Regular.ttf') format(truetype);
+} */
+
 html {
   box-sizing: border-box;
   font-size: 16px;
@@ -30,6 +35,10 @@ img {
   --light-red-color: #b1617d;
   --medium-red-color: #84485D;
   --dark-red-color: #1C0202;
+  --medium-grey-color: #AEAEAE;
+  --dark-brown-color: #583F3F;
+  --light-brown-color: #664b4b;
+
     color: white;
 }
 
@@ -106,4 +115,41 @@ main.game-container {
   margin-block: 5px;
   margin-inline: 8px;
   height: 20%;
+}
+
+/* PAGE PRESENTATION */
+
+.presentation {
+  pointer-events:none;
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: end;
+  align-items: center;
+  top:0;
+  left: 0;
+  min-width: 100vw;
+  min-height: 100vh;
+}
+
+.sign-board {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 580px;
+  height: 160px;
+  border-radius: 60px;
+  background-color: var(--medium-grey-color);
+  color: black;
+  font-size: 5rem;
+  box-shadow: 20px 15px 10px inset rgba(0, 0, 0, 0.25);
+}
+
+.sign-post {
+  width: 40px;
+  height: 80vh;
+  /* background-color: var(--dark-brown-color);
+  box-shadow: -7px 0px var(--light-brown-color); */
+  background-color: var(--light-brown-color);
+  box-shadow: -7px 0px var(--dark-brown-color);
 }

@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/Murillo-Me/battleship-top#readme",
   "devDependencies": {
-    "@babel/preset-env": "^7.16.4",
+    "@babel/preset-env": "^7.16.5",
     "browser-sync": "^2.27.7",
     "browser-sync-webpack-plugin": "^2.3.0",
     "css-loader": "^6.5.1",
@@ -27,6 +27,7 @@
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.25.3",
     "html-loader": "^3.0.1",
+    "html-loader-jest": "^0.2.1",
     "html-webpack-plugin": "^5.5.0",
     "jest": "^27.4.3",
     "mini-css-extract-plugin": "^2.4.5",
@@ -39,6 +40,7 @@
     "webpack-dev-server": "^4.6.0"
   },
   "jest": {
+    "testEnvironment": "jsdom",
     "modulePaths": [
       "/shared/vendor/modules"
     ],
@@ -55,6 +57,10 @@
       "\\.(css|less)$": "<rootDir>/__mocks__/styleMock.js",
       "\\.(gif|ttf|eot|svg)$": "<rootDir>/__mocks__/fileMock.js",
       "^config$": "<rootDir>/configs/app-config.js"
+    },
+    "transform": {
+      "^.+\\.js$": "babel-jest",
+      "^.+\\.html?$": "html-loader-jest"
     }
   }
 }
