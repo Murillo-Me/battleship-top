@@ -45,17 +45,17 @@ const gameboardFactory = (gameboardList, boardSize = 10) => {
   };
 
   const placeShip = (shipObject, yCoord = false, xCoord = false) => {
-    if (!yCoord) {
-      do {
-        yCoord = getRandomIntInclusive(0, boardSize - 1);
-      } while (((boardSize - 1) - xCoord) > shipObject.size || shipObject.shipOrient === 'vertical');
-    }
+    // if (!yCoord) {
+    //   do {
+    //     yCoord = getRandomIntInclusive(0, boardSize - 1);
+    //   } while (((boardSize - 1) - xCoord) > shipObject.size || shipObject.shipOrient === 'vertical');
+    // }
 
-    if (!xCoord) {
-      do {
-        xCoord = getRandomIntInclusive(0, boardSize - 1);
-      } while (((boardSize - 1) - xCoord) > shipObject.size || shipObject.shipOrient === 'vertical');
-    }
+    // if (!xCoord) {
+    //   do {
+    //     xCoord = getRandomIntInclusive(0, boardSize - 1);
+    //   } while (((boardSize - 1) - xCoord) > shipObject.size || shipObject.shipOrient === 'vertical');
+    // }
 
     for (let i = 0; i < shipObject.size; i += 1) {
       if (shipObject.shipOrient === 'vertical') {
@@ -67,9 +67,9 @@ const gameboardFactory = (gameboardList, boardSize = 10) => {
 
     shipsOnBoard.push(shipObject);
 
-    console.log(shipObject);
-    console.log(yCoord);
-    console.log(xCoord);
+    // console.log(shipObject);
+    // console.log(yCoord);
+    // console.log(xCoord);
   };
 
   // eslint-disable-next-line consistent-return
