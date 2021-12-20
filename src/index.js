@@ -17,10 +17,10 @@ standardShipSizes.forEach((shipSize) => {
   shipList.push(shipFactory(shipList, shipSize));
 });
 
-console.log(shipList);
+// console.log(shipList);
 
-shipList.forEach((ship) => gameboard1.placeShip(ship, 2, 2));
-// shipList.forEach((ship) => gameboard2.placeShip(ship));
+shipList.forEach((ship) => gameboard1.placeShip(ship));
+shipList.forEach((ship) => gameboard2.placeShip(ship));
 
 gameboardDOM.createBoardDOM(gameboard1);
 gameboardDOM.createBoardDOM(gameboard2);

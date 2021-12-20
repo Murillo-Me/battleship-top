@@ -17,15 +17,13 @@ const gameboardDOM = (function () {
 
   function renderShips(gameboardList) {
     gameboardList.forEach((board) => {
-      console.log(board);
       board.boardArray.forEach((row, r) => {
-        // console.log(row);
         row.forEach((column, c) => {
-          // console.log(column);
           if (board.boardArray[r][c] === 0) return;
+          const colorChanger = 255 - 40 * board.boardArray[r][c];
           const shipUnitElement = document.querySelector(`.gb-id-${board.boardID} > .r${r}-c${c}`);
           shipUnitElement.classList.add('ship-unit');
-          shipUnitElement.style['background-color'] = 'white';
+          shipUnitElement.style['background-color'] = `rgb(${colorChanger},${colorChanger},${colorChanger})`;
         });
       });
     });

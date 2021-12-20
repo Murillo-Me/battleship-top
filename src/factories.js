@@ -44,44 +44,62 @@ const gameboardFactory = (gameboardList, boardSize = 10) => {
     return boardArray;
   };
 
-  const placeShip = (shipObject, yCoord = false, xCoord = false) => {
-    // if (!yCoord) {
-    //   do {
-    //     yCoord = getRandomIntInclusive(0, boardSize - 1);
-    //   } while (((boardSize - 1) - xCoord) > shipObject.size || shipObject.shipOrient === 'vertical');
-    // }
-
-    // if (!xCoord) {
-    //   do {
-    //     xCoord = getRandomIntInclusive(0, boardSize - 1);
-    //   } while (((boardSize - 1) - xCoord) > shipObject.size || shipObject.shipOrient === 'vertical');
-    // }
-
-    for (let i = 0; i < shipObject.size; i += 1) {
-      if (shipObject.shipOrient === 'vertical') {
-        boardArray[yCoord + i][xCoord] = shipObject.shipID;
-      } else {
-        boardArray[yCoord][xCoord + i] = shipObject.shipID;
+  const checkShipCollision = (shipObj, yCoord, xCoord) => {
+    let collisionState = false;
+    for (let i = 0; i < shipObj.size; i += 1) {
+      if (shipObj.shipOrient === 'vertical') {
+        collisionState = (collisionState || (boardArray[yCoord + i][xCoord] !== 0));
+      } else if (shipObj.shipOrient === 'horizontal') {
+        collisionState = (collisionState || (boardArray[yCoord][xCoord + i] !== 0));
       }
     }
 
-    shipsOnBoard.push(shipObject);
+    return collisionState;
+  };
 
-    // console.log(shipObject);
-    // console.log(yCoord);
-    // console.log(xCoord);
+  const placeShip = (shipObj, yCoord = false, xCoord = false) => {
+    // let i = 0;
+
+    let collisionState = false;
+    do {
+      if (!yCoord || collisionState) {
+        do {
+          yCoord = getRandomIntInclusive(0, boardSize - 1);
+          if (shipObj.shipOrient === 'horizontal') break;
+        } while (((boardSize - 1) - yCoord) < shipObj.size);
+      }
+
+      if (!xCoord || collisionState) {
+        do {
+          xCoord = getRandomIntInclusive(0, boardSize - 1);
+          if (shipObj.shipOrient === 'vertical') break;
+        } while (((boardSize - 1) - xCoord) < shipObj.size);
+      }
+
+      collisionState = checkShipCollision(shipObj, yCoord, xCoord);
+    } while (collisionState);
+
+    for (let i = 0; i < shipObj.size; i += 1) {
+      if (shipObj.shipOrient === 'vertical') {
+        boardArray[yCoord + i][xCoord] = shipObj.shipID;
+      } else {
+        boardArray[yCoord][xCoord + i] = shipObj.shipID;
+      }
+    }
+
+    shipsOnBoard.push(shipObj);
   };
 
   // eslint-disable-next-line consistent-return
-  const identifyShipHitPosition = (shipObject, yCoord, xCoord) => {
+  const identifyShipHitPosition = (shipObj, yCoord, xCoord) => {
     let shipHitPosition = 1;
-    for (let i = 1; i < shipObject.size + 1; i += 1) {
-      if (shipObject.shipOrient === 'vertical') {
+    for (let i = 1; i < shipObj.size + 1; i += 1) {
+      if (shipObj.shipOrient === 'vertical') {
         if (boardArray[yCoord - i][xCoord] === boardArray[yCoord][xCoord]) {
           shipHitPosition += 1;
         } else return shipHitPosition;
       }
-      if (shipObject.shipOrient === 'horizontal') {
+      if (shipObj.shipOrient === 'horizontal') {
         if (boardArray[yCoord][xCoord - i] === boardArray[yCoord][xCoord]) {
           shipHitPosition += 1;
         } else return shipHitPosition;
