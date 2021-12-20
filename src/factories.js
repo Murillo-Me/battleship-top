@@ -108,20 +108,21 @@ const gameboardFactory = (gameboardList, boardSize = 10) => {
   };
 
   // eslint-disable-next-line consistent-return
-  const receiveAttack = (shipArray, yAttackCoord, xAttackCoord) => {
-    if (boardArray[yAttackCoord][xAttackCoord] < 0) return 'already tried';
+  const receiveAttack = (shipArray, { yCoord, xCoord }) => {
+    if (boardArray[yCoord][xCoord] < 0) return 'already tried';
 
-    if (boardArray[yAttackCoord][xAttackCoord] === 0) {
-      boardArray[yAttackCoord][xAttackCoord] = -10;
-      return 'missed';
+    if (boardArray[yCoord][xCoord] === 0) {
+      boardArray[yCoord][xCoord] = -10;
+      return false;
     }
 
-    if (boardArray[yAttackCoord][xAttackCoord] > 0) {
-      const shipID = boardArray[yAttackCoord][xAttackCoord];
-      const hitPos = identifyShipHitPosition(shipArray[shipID], yAttackCoord, xAttackCoord);
-      shipArray[shipID].hit(hitPos);
-      boardArray[yAttackCoord][xAttackCoord] = -100;
-      return 'success';
+    if (boardArray[yCoord][xCoord] > 0) {
+      const shipID = boardArray[yCoord][xCoord];
+      const hitPos = identifyShipHitPosition(shipArray[shipID - 1], yCoord, xCoord);
+      console.log(hitPos);
+      console.log(shipArray[shipID - 1].hit(hitPos));
+      boardArray[yCoord][xCoord] = -100;
+      return true;
     }
   };
 

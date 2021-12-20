@@ -78,6 +78,9 @@ main.game-container {
 
 .board-unit {
   border: 1px solid black;
+  color: var(--medium-red-color);
+  text-align: center;
+  font-size: 2rem;
 }
 
 .playing-state:hover {

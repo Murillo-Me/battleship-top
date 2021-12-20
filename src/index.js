@@ -4,30 +4,25 @@ import { shipFactory, gameboardFactory, playerFactory } from './factories';
 import { gameboardDOM } from './battleshipDOM';
 
 const standardShipSizes = [5, 4, 3, 3, 2];
-
 const shipList = [];
 const gameboardList = [];
-
-const gameboard1 = gameboardFactory(gameboardList, 10);
-gameboardList.push(gameboard1);
-const gameboard2 = gameboardFactory(gameboardList, 10);
-gameboardList.push(gameboard2);
 
 standardShipSizes.forEach((shipSize) => {
   shipList.push(shipFactory(shipList, shipSize));
 });
 
-// console.log(shipList);
+for (let i = 0; i < 2; i += 1) {
+  gameboardList.push(gameboardFactory(gameboardList, 10));
+}
 
-shipList.forEach((ship) => gameboard1.placeShip(ship));
-shipList.forEach((ship) => gameboard2.placeShip(ship));
+gameboardList.forEach((gameboard) => {
+  shipList.forEach((ship) => gameboard.placeShip(ship));
+  gameboardDOM.createBoardDOM(gameboard);
+});
 
-gameboardDOM.createBoardDOM(gameboard1);
-gameboardDOM.createBoardDOM(gameboard2);
+gameboardDOM.renderShips(gameboardList[0]);
 
-gameboardDOM.toggleBoardPlayingState(gameboard1);
+gameboardDOM.renderShips(gameboardList[1]);
 
-gameboardDOM.renderShips(gameboardList);
-
-// const allBoardUnits = document.querySelectorAll('.board-unit');
-// allBoardUnits.forEach((unit) => unit.addEventListener('click', (e) => { e.currentTarget.style['background-color'] = 'white'; }));
+gameboardDOM.toggleBoardPlayingState(gameboardList[1]);
+gameboardDOM.addAttackEventListener(gameboardList[1], shipList);
